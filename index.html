@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+  </style>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDooby50SZmgLLDZOiFTA2FuqjnuBSN_R0&libraries=places&callback=initMap" async defer></script>
+</head>
+<body>
+
+<h1>Epilesy Hospitals Near You</h1>
+
+<div id="map"></div>
+
+<script>
+  function initMap() {
+    // Default location (you can set this based on the user's location)
+    var defaultLocation = { lat: 40.7128, lng: -74.0060 };
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      center: defaultLocation,
+      zoom: 12
+    });
+
+    var request = {
+      location: defaultLocation,
+      radius: 5000,  // Search within a 5km radius (adjust as needed)
+      keyword: 'epilepsy hospital'
+    };
+
+    var service = new google.maps.places.PlacesService(map);
+
+    service.nearbySearch(request, function(results, status) {
+      if (status == google.maps.places.PlacesServiceStatus.OK) {
+        for (var i = 0; i < results.length; i++) {
+          createMarker(results[i]);
+          displayHospitalInfo(results[i]);
+        }
+      }
+    });
+  }
+
+  function createMarker(place) {
+    var marker = new google.maps.Marker({
+      map: map,
+      position: place.geometry.location
+    });
+
+    google.maps.event.addListener(marker, 'click', function() {
+      // Handle marker click event if needed
+      // You can display additional information about the hospital here
+    });
+  }
+
+  function displayHospitalInfo(place) {
+    var infoWindow = new google.maps.InfoWindow();
+    
+    var content = '<strong>' + place.name + '</strong><br>' +
+                  'Address: ' + place.vicinity + '<br>' +
+                  'Rating: ' + (place.rating || 'N/A');
+
+    var marker = new google.maps.Marker({
+      map: map,
+      position: place.geometry.location
+    });
+
+    google.maps.event.addListener(marker, 'click', function() {
+      infoWindow.setContent(content);
+      infoWindow.open(map, this);
+    });
+  }
+</script>
+
+</body>
+</html>

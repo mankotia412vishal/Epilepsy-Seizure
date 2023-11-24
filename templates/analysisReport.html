@@ -1,0 +1,193 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<style>
+  .gauge {
+    width: 100%;
+    max-width: 400px;
+    font-family: "Roboto", sans-serif;
+    font-size: 25px;
+    color: #004033;
+  }
+
+  .gauge__body {
+    width: 100%;
+    height: 0;
+    padding-bottom: 50%;
+    background: #b4c0be;
+    position: relative;
+    border-top-left-radius: 100% 200%;
+    border-top-right-radius: 100% 200%;
+    overflow: hidden;
+  }
+
+  .gauge__fill {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: inherit;
+    height: 100%;
+    background: #009578;
+    transform-origin: center top;
+    transform: rotate(0.25turn);
+    transition: transform 0.2s ease-out;
+  }
+
+  .gauge__cover {
+    width: 75%;
+    height: 150%;
+    background: #e7e4e4;
+     
+    border-radius: 50%;
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* Text */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 25%;
+    box-sizing: border-box;
+  }
+
+  #Vishal {
+    text-align: center;
+    position: absolute;
+    top: 58%;
+    left: 25%;
+    font-weight: bold;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .creamy-box {
+    width: 900px;
+    padding: 20px;
+    background-color: #f9f7f7;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-around; /* Updated to space around for better layout */
+    align-items: center;
+    height: 400px;
+    margin: 0;
+    background-color: #f4f0f0;
+  }
+
+  .pie-chart {
+    max-width: 400px;  
+    /* make sure the canvas is not too big */
+    
+  }
+  #acc{
+    text-align: center;
+    position: absolute;
+    top: 90%;
+    left: 57%;
+    font-weight: bold;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+#hos{
+  position: absolute;
+  top: 69%;
+  left: 42%;
+  font-weight: bold;
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+
+}
+</style>
+
+<div class="creamy-box">
+  <div class="gauge">
+    <div class="gauge__body">
+      <div class="gauge__fill"></div>
+      <div class="gauge__cover"></div>
+    </div>
+  </div>
+  
+
+  <div id="Vishal">
+    {% if val==0 %}
+    The Person is not having Epilepsy Seizure.
+    {% endif %}
+
+    {% if val==1 %}
+    The Person  is   having  Epilepsy Seizure.
+    {% endif %}
+  </div>
+  <!-- <div>
+    <h4 id="acc">Model Accuracy Distribution</h4>
+  </div> -->
+
+  <canvas class="pie-chart" id="myPieChart"  height="20"></canvas>
+
+
+
+</div>
+
+<!-- create a button below and as I will click on the button a page google maps page will open and search on it automatically all the hosipitals near by me -->
+<button  id="hos" onclick="window.location.href = 'https://www.google.com/maps/search/hospitals+near+me'">Find Hospitals Near By Me</button>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Sample data for the pie chart
+  var pieChartData = {
+    labels: ["Logistic Regression", "SVM", "KNN", "Modified LSTM", "ANN"],
+    datasets: [{
+      data: [66.92, 97.23, 91.96, 97.47, 96.66],
+      backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4CAF50", "#FF9800"],
+      hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4CAF50", "#FF9800"]
+    }]
+  };
+
+  // Get the canvas element
+  var ctx = document.getElementById('myPieChart').getContext('2d');
+
+  // Create and render the pie chart
+  var myPieChart = new Chart(ctx, {
+    type: 'pie',
+    data: pieChartData,
+    options: {
+      animation: {
+        animateRotate: true,
+        animateScale: true
+      }
+    }
+  });
+  const gaugeElement = document.querySelector(".gauge");
+
+function setGaugeValue(gauge, value) {
+  if (value < 0 || value > 1) {
+    return;
+  }
+
+  gauge.querySelector(".gauge__fill").style.transform = `rotate(${
+    value / 2
+  }turn)`;
+  gauge.querySelector(".gauge__cover").textContent = `${Math.round(
+    value * 100
+  )}%`;
+}
+// get the val from the flask and pass in the setGaugeValue function
+
+setGaugeValue(gaugeElement,  {{val}});
+ 
+
+</script>
+
+{% endblock %}
