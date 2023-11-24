@@ -1,4 +1,4 @@
-#Automated Epileptic Seizure Detection in EEG Data: Machine Learning and Deep Learning Approaches
+# Automated Epileptic Seizure Detection in EEG Data: Machine Learning and Deep Learning Approaches
 
 Automated Epileptic Seizure Detection in EEG Data: Machine Learning and Deep Learning Approaches
 ## This project is modified and many upadates has been done in this project
